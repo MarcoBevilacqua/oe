@@ -25,11 +25,8 @@ class AppServiceProvider extends ServiceProvider
 
         // http client macro
         Http::macro('iucn', function () {
-            return Http::withHeaders([
-                'X-Example' => 'example',
-            ])->baseUrl(
-                config('api.iucn.base_url') .
-                config('api.iucn.version')
+            return Http::baseUrl(
+                config('api.iucn.base_url') . config('api.iucn.version')
             )->withQueryParameters(['token' => config('api.iucn.token')]);
         });
     }
