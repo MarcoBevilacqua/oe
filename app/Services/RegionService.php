@@ -17,16 +17,26 @@ class RegionService
      */
     private array $regionsList = [];
 
-    public function getRandomRegion(): array
+    /**
+     * @return string
+     * return the identifier from a random region
+     */
+    public function getRandomRegion(): string
     {
-        return Arr::random($this->regionsList);
+        // get from cache if already loaded
+        if (empty($this->regionsList)) {
+            $this->fetch();
+        }
+
+        return Arr::random($this->regionsList)['identifier'];
     }
 
     /**
      * @return void
-     * get the region list from IUCN Api
+     * fetch the region list from IUCN Red list Api
+     * https://apiv3.iucnredlist.org/
      */
-    private function getRegionList(): void
+    public function fetch(): void
     {
         /** @var Response $response */
         $response = Http::iucn()
@@ -37,6 +47,7 @@ class RegionService
             Log::error("Cannot load regions from API: " .  $response->getResponseStatus());
         }
 
+        // store results in cache since there is no need to display
         $this->regionsList = $response->json('results');
     }
 }
