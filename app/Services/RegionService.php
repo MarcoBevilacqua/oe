@@ -39,8 +39,7 @@ class RegionService
     public function fetch(): void
     {
         /** @var Response $response */
-        $response = Http::iucn()
-            ->get(self::LIST_URL);
+        $response = Http::iucn()->get(self::LIST_URL);
 
         // handle error
         if (!$response->successful()) {
