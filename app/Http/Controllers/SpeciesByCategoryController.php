@@ -7,17 +7,14 @@ use App\Interfaces\Filter;
 use App\Services\RegionService;
 use App\Services\SpeciesService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SpeciesByCategoryController extends Controller
 {
     public function __construct(protected Filter $filter)
     {}
 
-    public function index(Request $request, string $categoryId, RegionService $regionService): JsonResponse
+    public function index(string $categoryId, RegionService $regionService): JsonResponse
     {
-        dd($request->getRequestUri());
-
         // init species service to inject dependency
         $speciesService = new SpeciesService($regionService);
 
