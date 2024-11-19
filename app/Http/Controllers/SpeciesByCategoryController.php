@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CategorySpeciesResource;
+use App\Http\Resources\SpeciesResource;
 use App\Interfaces\Filter;
 use App\Services\RegionService;
 use App\Services\SpeciesService;
@@ -24,13 +24,13 @@ class SpeciesByCategoryController extends Controller
         // load species from a random region (filter by category)
         $speciesList = $speciesService->fetch();
 
-        // return filtered list
-        $species = $this->filter->filter($speciesList, $categoryId);
+        // // apply filter
+        $species = $this->filter->apply($speciesList, $categoryId);
 
         // return resource with concatenated text property
         return response()->json(
             collect($species)->map(function ($species) use ($regionService) {
-                return new CategorySpeciesResource($species);
+                return new SpeciesResource($species);
             })
         );
     }

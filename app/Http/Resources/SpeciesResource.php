@@ -5,8 +5,9 @@ namespace App\Http\Resources;
 use App\Services\MeasuresService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
-class CategorySpeciesResource extends JsonResource
+class SpeciesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +21,10 @@ class CategorySpeciesResource extends JsonResource
                 'id' => $this->taxonid,
                 'class_name' => $this->class_name,
                 'category' => $this->category,
-                'measures' => MeasuresService::getMeasuresForSpecies($this->taxonid, $request->regionId)
+                'measures' => $this->when(
+                    Str::contains('category', $request->getRequestUri()),
+                    MeasuresService::getMeasuresForSpecies($this->taxonid, $request->regionId),
+                    "" ),
             ];
     }
 }
