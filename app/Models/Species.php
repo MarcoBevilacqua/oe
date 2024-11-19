@@ -11,5 +11,5 @@ class Species extends Model
 
     protected $table = 'species';
 
-    protected $fillable = ['category', 'class_name', 'measures'];
+    protected $fillable = ['category', 'class_name', 'region_id', 'measures'];
 }

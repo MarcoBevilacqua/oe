@@ -21,10 +21,14 @@ class SpeciesByCategoryController extends Controller
         // load species from a random region (filter by category)
         $speciesList = $speciesService->fetch();
 
-        // // apply filter
+        // apply filter
         $species = $this->filter->apply($speciesList, $categoryId);
 
+        // add measures to species array
+        $speciesService->addMeasures($species);
+
         // return resource with concatenated text property
+        // TODO: use collectionResource
         return response()->json(
             collect($species)->map(function ($species) use ($regionService) {
                 return new SpeciesResource($species);

@@ -11,20 +11,21 @@ class MeasuresService
 {
     private const MEASURES_URL = 'measures/species/id/';
 
+    private const REGION_PARAM = '/region/';
+
     /**
      * @param int $speciesId
      * @param string $region
      * @return string
      *
-     * retrieve measures for given species and region
-     * return as a concatenated text property
+     * get measures for given species and return as a concatenated text property
      */
     public static function getMeasuresForSpecies(int $speciesId, string $region): string {
 
         $measures = [];
 
         /** @var Response $response */
-        $response = Http::iucn()->get(${self::MEASURES_URL . $speciesId . "/region/" . $region });
+        $response = Http::iucn()->get(${self::MEASURES_URL . $speciesId . self::REGION_PARAM . $region });
 
         // handle error
         if (!$response->successful()) {
@@ -37,5 +38,4 @@ class MeasuresService
 
         return Arr::join($measures, ",");
     }
-
 }
