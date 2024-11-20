@@ -30,7 +30,7 @@ class RegionService
             $this->fetch();
         }
 
-        return Arr::random($this->regionsList)['identifier'];
+        return empty($this->regionsList) ? '' : Arr::random($this->regionsList)['identifier'];
     }
 
     /**

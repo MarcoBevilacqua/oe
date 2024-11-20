@@ -34,12 +34,17 @@ class SpeciesService {
         // retrieve random region identifier
         $regionId = $this->regionService->getRandomRegion();
 
+        if(!$regionId) {
+            return [];
+        }
+
         /** @var Response $response */
         $response = Http::iucn()->get(self::URL . self::REGION_PARAM . $regionId . self::PAGE_PARAM . $page);
 
         // handle error
         if (!$response->successful()) {
             Log::error("Cannot fetch species from API: " . $response->getResponseStatus());
+            return [];
         }
 
         // return results as array of species
