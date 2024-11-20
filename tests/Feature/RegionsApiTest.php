@@ -31,10 +31,7 @@ class RegionsApiTest extends TestCase
                 ]),
         ]);
     }
-
-    /**
-     * A basic feature test example.
-     */
+    
     public function test_region_service_returns_identifier(): void
     {
         $regionService = new RegionService();

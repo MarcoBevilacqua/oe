@@ -62,29 +62,33 @@ class SpeciesApiTest extends TestCase
 
     public function test_should_return_one_not_endangered_species(): void
     {
-        $this->setFakeResponseForSpeciesApi([Species::factory()->count(1)->notEndangered()]);
+        $this->setFakeResponseForSpeciesApi([
+            Species::factory()->count(1)->notEndangered(),
+            Species::factory()->count(2)->endangered()
+        ]);
         $response = $this->get('/species/NT/category')->assertStatus(200);
         $this->assertCount(1, $response->json());
     }
 
     public function test_should_return_no_species(): void
     {
-        $this->setFakeResponseForSpeciesApi(Species::factory()->count(1)->make(['category' => 'DD']));
+        $this->setFakeResponseForSpeciesApi(Species::factory()->count(5)->make(['category' => 'DD']));
         $response = $this->get('/species/CR/category')->assertStatus(200);
         $this->assertCount(0, $response->json());
     }
 
     public function test_should_return_only_mammalia_species(): void
     {
-        $this->setFakeResponseForSpeciesApi([Species::factory()->count(1)->mammal()]);
+        $this->setFakeResponseForSpeciesApi(
+            Species::factory()->count(4)->make(['class_name' => "MAMMALIA"])->toArray());
         $response = $this->get('/species/MAMMALIA/class')->assertStatus(200);
-        $this->assertCount(1, $response->json());
+        $this->assertCount(4, $response->json());
     }
     public function test_should_return_not_mammal_species(): void
     {
-        $this->setFakeResponseForSpeciesApi(Species::factory()->count(1)->make(['class_name' => 'ACTINOPTERYGII']),);
+        $this->setFakeResponseForSpeciesApi(Species::factory()->count(3)->make(['class_name' => 'ACTINOPTERYGII'])->toArray());
         $response = $this->get('/species/ACTINOPTERYGII/class')->assertStatus(200);
-        $this->assertCount(1, $response->json());
+        $this->assertCount(3, $response->json());
     }
 
 }
