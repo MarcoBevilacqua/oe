@@ -11,6 +11,8 @@ class RegionService
 {
     private const LIST_URL = 'region/list';
 
+    private const API_RESULT_KEY = 'results';
+
     /**
      * @var $regionsList array
      * stores the region list and retrieve the random element
@@ -34,7 +36,6 @@ class RegionService
     /**
      * @return void
      * fetch the region list from IUCN Red list Api
-     * https://apiv3.iucnredlist.org/
      */
     public function fetch(): void
     {
@@ -47,6 +48,6 @@ class RegionService
         }
 
         // store results in cache, no need to display
-        $this->regionsList = $response->json('results');
+        $this->regionsList = $response->json(self::API_RESULT_KEY)?? [];
     }
 }

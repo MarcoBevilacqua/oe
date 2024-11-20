@@ -25,7 +25,7 @@ class MeasuresService
         $measures = [];
 
         /** @var Response $response */
-        $response = Http::iucn()->get(${self::MEASURES_URL . $speciesId . self::REGION_PARAM . $region });
+        $response = Http::iucn()->get(self::MEASURES_URL . $speciesId . self::REGION_PARAM . $region);
 
         // handle error
         if (!$response->successful()) {

@@ -4,14 +4,17 @@ namespace App\Services;
 
 use App\Models\Species;
 use http\Client\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class SpeciesService {
 
-    private const URL = 'species/region/';
+    private const URL = 'species/';
     private const REGION_PARAM = 'region/';
-    private const PAGE_PARAM = 'page/';
+    private const PAGE_PARAM = '/page/';
+
+    private const API_RESULT_KEY = 'result';
 
     private RegionService $regionService;
 
@@ -39,15 +42,15 @@ class SpeciesService {
             Log::error("Cannot fetch species from API: " . $response->getResponseStatus());
         }
 
-        // return results as array of species (with region_id)
-        return
-            collect($response->json('results'))->map(function ($item) use ($regionId) {
-                return new Species([
-                    'category' => $item['category'],
-                    'class_name' => $item['class_name'],
-                    'region_id' => $regionId,
-                ]);
-            })->toArray();
+        // return results as array of species
+        return Arr::map($response->json(self::API_RESULT_KEY), function ($item) use ($regionId) {
+            return new Species([
+                'taxonid'    => $item['taxonid'],
+                'category' => $item['category'],
+                'class_name' => $item['class_name'],
+                'region_id' => $regionId,
+            ]);
+        });
     }
 
     /**
@@ -58,8 +61,8 @@ class SpeciesService {
      */
     public function addMeasures(array $species): array
     {
-        return collect($species)->map(function ($item) {
-            $item['measures'] = MeasuresService::getMeasuresForSpecies($item->id, $item->region_id);
-        })->toArray();
+        return Arr::map($species, function ($speciesItem) {
+            $speciesItem->measures = MeasuresService::getMeasuresForSpecies($speciesItem->taxonid, $speciesItem->region_id);
+        });
     }
 }
