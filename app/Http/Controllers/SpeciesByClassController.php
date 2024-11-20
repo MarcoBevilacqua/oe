@@ -7,6 +7,7 @@ use App\Interfaces\Filter;
 use App\Services\RegionService;
 use App\Services\SpeciesService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 
 class SpeciesByClassController extends Controller
 {
@@ -26,8 +27,8 @@ class SpeciesByClassController extends Controller
 
         // return resource with concatenated text property
         return response()->json(
-            collect($species)->map(function ($species) use ($regionService) {
-                return new SpeciesResource($species);
+            Arr::map($species, function ($item) {
+                return new SpeciesResource($item);
             })
         );
     }
