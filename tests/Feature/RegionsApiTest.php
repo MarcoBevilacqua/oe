@@ -2,21 +2,44 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Services\RegionService;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class RegionsApiTest extends TestCase
 {
+    use WithoutMiddleware;
+
+    public function setup(): void
+    {
+        parent::setup();
+        Http::preventStrayRequests();
+    }
+
     /**
      * A basic feature test example.
      */
-    public function test_should_call_regions_api(): void
+    public function test_region_service_returns_identifier(): void
     {
-        Http::fake();
+        Http::fake([
+            'https://apiv3.iucnredlist.org/api/v3/region/*' => Http::response(
+                [
+                    'count' => 2,
+                    'results' => [[
+                        "name" => "Northeastern Africa",
+                        "identifier" => "northeastern_africa"
+                    ],
+                    [
+                        "name" => "Europe",
+                        "identifier" => "europe"
+                    ]],
+                ]),
+            ]);
 
-        $this->get('/regions')->assertStatus(200)
-            ->assertJsonStructure(['title', 'identifier']);
+        $regionService = new RegionService();
+        $randomRegion = $regionService->getRandomRegion();
+        $this->assertIsString($randomRegion);
+        $this->assertContains($randomRegion, ["northeastern_africa", "europe"]);
     }
 }
