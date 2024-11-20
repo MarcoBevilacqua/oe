@@ -15,13 +15,7 @@ class RegionsApiTest extends TestCase
     {
         parent::setup();
         Http::preventStrayRequests();
-    }
 
-    /**
-     * A basic feature test example.
-     */
-    public function test_region_service_returns_identifier(): void
-    {
         Http::fake([
             'https://apiv3.iucnredlist.org/api/v3/region/*' => Http::response(
                 [
@@ -30,13 +24,19 @@ class RegionsApiTest extends TestCase
                         "name" => "Northeastern Africa",
                         "identifier" => "northeastern_africa"
                     ],
-                    [
-                        "name" => "Europe",
-                        "identifier" => "europe"
-                    ]],
+                        [
+                            "name" => "Europe",
+                            "identifier" => "europe"
+                        ]],
                 ]),
-            ]);
+        ]);
+    }
 
+    /**
+     * A basic feature test example.
+     */
+    public function test_region_service_returns_identifier(): void
+    {
         $regionService = new RegionService();
         $randomRegion = $regionService->getRandomRegion();
         $this->assertIsString($randomRegion);
