@@ -7,10 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SpeciesResource extends JsonResource
 {
-    public static function collection($resource)
-    {
-        return SpeciesResource::collection($resource);
-    }
 
     /**
      * Transform the resource into an array.
