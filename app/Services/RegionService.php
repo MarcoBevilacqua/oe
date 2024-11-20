@@ -46,7 +46,7 @@ class RegionService
             Log::error("Cannot load regions from API: " .  $response->getResponseStatus());
         }
 
-        // store results in cache since there is no need to display
+        // store results in cache, no need to display
         $this->regionsList = $response->json('results');
     }
 }
